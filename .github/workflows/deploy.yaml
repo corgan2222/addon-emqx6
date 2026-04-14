@@ -12,6 +12,10 @@ on:
     types:
       - completed
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   workflows:
     uses: hassio-addons/workflows/.github/workflows/addon-deploy.yaml@main
