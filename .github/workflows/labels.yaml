@@ -1,1 +1,27 @@
-bmFtZTogU3luYyBsYWJlbHMKCiMgeWFtbGxpbnQgZGlzYWJsZS1saW5lIHJ1bGU6dHJ1dGh5Cm9uOgogIHNjaGVkdWxlOgogICAgLSBjcm9uOiAiMzQgNSAqICogKiIKICB3b3JrZmxvd19kaXNwYXRjaDoKCnBlcm1pc3Npb25zOgogIGlzc3Vlczogd3JpdGUKCmpvYnM6CiAgbGFiZWxzOgogICAgbmFtZTogU3luYyBsYWJlbHMKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKICAgIHN0ZXBzOgogICAgICAtIG5hbWU6IERvd25sb2FkIGxhdGVzdCBsYWJlbHMgZGVmaW5pdGlvbnMKICAgICAgICBydW46IHwKICAgICAgICAgIGN1cmwgLXMgLS1yZXRyeSA1IFwKICAgICAgICAgICAgImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9oYXNzaW8tYWRkb25zL3dvcmtmbG93cy9tYWluLy5naXRodWIvbGFiZWxzLnltbCIgXAogICAgICAgICAgICA+IGxhYmVscy55bWwKICAgICAgLSBuYW1lOiBSdW4gTGFiZWwgU3luY2VyCiAgICAgICAgdXNlczogbWljbm5jaW0vYWN0aW9uLWxhYmVsLXN5bmNlckAzYWJkNWFiNzJmZGE1NzFlNjlmZmZkOTdiZDRlMDAzM2RkNWY0OTVjICMgdjEuMy4wCiAgICAgICAgZW52OgogICAgICAgICAgR0lUSFVCX1RPS0VOOiAke3sgc2VjcmV0cy5HSVRIVUJfVE9LRU4gfX0KICAgICAgICB3aXRoOgogICAgICAgICAgbWFuaWZlc3Q6IGxhYmVscy55bWwK
+name: Sync labels
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "34 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    name: Sync labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download latest labels definitions
+        run: |
+          curl -s --retry 5 \
+            "https://raw.githubusercontent.com/hassio-addons/workflows/main/.github/labels.yml" \
+            > labels.yml
+      - name: Run Label Syncer
+        uses: micnncim/action-label-syncer@3abd5ab72fda571e69fffd97bd4e0033dd5f495c # v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          manifest: labels.yml
