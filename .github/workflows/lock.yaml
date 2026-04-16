@@ -1,1 +1,25 @@
-bmFtZTogTG9jawoKIyB5YW1sbGludCBkaXNhYmxlLWxpbmUgcnVsZTp0cnV0aHkKb246CiAgc2NoZWR1bGU6CiAgICAtIGNyb246ICIwIDkgKiAqICoiCiAgd29ya2Zsb3dfZGlzcGF0Y2g6CgpwZXJtaXNzaW9uczoKICBpc3N1ZXM6IHdyaXRlCiAgcHVsbC1yZXF1ZXN0czogd3JpdGUKCmpvYnM6CiAgbG9jazoKICAgIG5hbWU6IExvY2sgY2xvc2VkIGlzc3VlcyBhbmQgUFJzCiAgICBydW5zLW9uOiB1YnVudHUtbGF0ZXN0CiAgICBzdGVwczoKICAgICAgLSB1c2VzOiBkZXNzYW50L2xvY2stdGhyZWFkc0A3MjY2YTdjZTVjMWRmMDFiMWM2ZGI4NWJmOGNkODZjNzM3ZGFkYmU3ICMgdjYuMC4wCiAgICAgICAgd2l0aDoKICAgICAgICAgIGdpdGh1Yi10b2tlbjogJHt7IHNlY3JldHMuR0lUSFVCX1RPS0VOIH19CiAgICAgICAgICBwcm9jZXNzLW9ubHk6ICJpc3N1ZXMsIHBycyIKICAgICAgICAgIGlzc3VlLWluYWN0aXZlLWRheXM6ICIzMCIKICAgICAgICAgIGlzc3VlLWxvY2stcmVhc29uOiAiIgogICAgICAgICAgcHItaW5hY3RpdmUtZGF5czogIjEiCiAgICAgICAgICBwci1sb2NrLXJlYXNvbjogIiIK
+name: Lock
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  lock:
+    name: Lock closed issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/lock-threads@7266a7ce5c1df01b1c6db85bf8cd86c737dadbe7 # v6.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          process-only: "issues, prs"
+          issue-inactive-days: "30"
+          issue-lock-reason: ""
+          pr-inactive-days: "1"
+          pr-lock-reason: ""
