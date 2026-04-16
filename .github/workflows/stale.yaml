@@ -1,1 +1,27 @@
-bmFtZTogU3RhbGUKCiMgeWFtbGxpbnQgZGlzYWJsZS1saW5lIHJ1bGU6dHJ1dGh5Cm9uOgogIHNjaGVkdWxlOgogICAgLSBjcm9uOiAiMCA4ICogKiAqIgogIHdvcmtmbG93X2Rpc3BhdGNoOgoKcGVybWlzc2lvbnM6CiAgaXNzdWVzOiB3cml0ZQogIHB1bGwtcmVxdWVzdHM6IHdyaXRlCgpqb2JzOgogIHN0YWxlOgogICAgbmFtZTogU3RhbGUgaXNzdWVzIGFuZCBQUnMKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKICAgIHN0ZXBzOgogICAgICAtIHVzZXM6IGFjdGlvbnMvc3RhbGVAYjVkNDFkNGUxZDVkY2VlYTEwZTcxMDQ3ODZiNzM2MjRjMThhMTkwZiAjIHYxMC4yLjAKICAgICAgICB3aXRoOgogICAgICAgICAgcmVwby10b2tlbjogJHt7IHNlY3JldHMuR0lUSFVCX1RPS0VOIH19CiAgICAgICAgICBkYXlzLWJlZm9yZS1zdGFsZTogMzAKICAgICAgICAgIGRheXMtYmVmb3JlLWNsb3NlOiA3CiAgICAgICAgICByZW1vdmUtc3RhbGUtd2hlbi11cGRhdGVkOiB0cnVlCiAgICAgICAgICBzdGFsZS1pc3N1ZS1sYWJlbDogInN0YWxlIgogICAgICAgICAgZXhlbXB0LWlzc3VlLWxhYmVsczogIm5vLXN0YWxlLGhlbHAtd2FudGVkIgogICAgICAgICAgc3RhbGUtcHItbGFiZWw6ICJzdGFsZSIKICAgICAgICAgIGV4ZW1wdC1wci1sYWJlbHM6ICJuby1zdGFsZSIK
+name: Stale
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Stale issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@b5d41d4e1d5dceea10e7104786b73624c18a190f # v10.2.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 30
+          days-before-close: 7
+          remove-stale-when-updated: true
+          stale-issue-label: "stale"
+          exempt-issue-labels: "no-stale,help-wanted"
+          stale-pr-label: "stale"
+          exempt-pr-labels: "no-stale"
